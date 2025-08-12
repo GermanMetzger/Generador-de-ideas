@@ -20,6 +20,7 @@ export default function Transcripcion({ urlYResultado, eliminar, index }) {
         <p>Transcripción: {urlYResultado.resultado}</p>
         <button onClick={() => {copiarAlPortapapeles(urlYResultado.resultado); eliminar(index);}}>Copiar y Eliminar</button>
         <button style={{ backgroundColor: 'red', color: 'white', margin: '5px' }} onClick={() => eliminar(index)}>Eliminar</button>
+        <a style={{ backgroundColor: 'green', color: 'white', margin: '5px' }} onClick={() => eliminar(index)} href={`https://chat.openai.com/?q=Analicemos esto: ${urlYResultado.resultado}`} target="_blank">Pegar a ChatGPT</a>
       </div>
     </div>
   )

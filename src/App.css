@@ -36,9 +36,26 @@ button{
     cursor: pointer;
 }
 
+a{
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+}
+
 button:hover{
     background-color: #0056b3;
 }
+
+a:hover{
+    background-color: gold;
+    color: black;
+}
+
+
 
 .transcriptiones{
     margin-top: 20px;
