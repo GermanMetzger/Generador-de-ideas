@@ -1,21 +1,40 @@
 import './App.css';
 import { useState, useEffect } from 'react';
+import Transcripcion from './components/Transcripciones/Transcripcion';
+
 
 function App() {
   const [url, setUrl] = useState('');
   const [transcription, setTranscription] = useState('Aqui aparecera la transcripcion');
+  const [loading, setLoading] = useState(false);
+  const [fallo, setFallo] = useState(false);
+  const [primera, setPrimera] = useState(true);
 
+  const [urlsYResultados, setUrlsYResultados] = useState([]);
 
+  const eliminarTranscripcion = (index) => {
+    console.log("eliminando transcripción en el índice:", index);
+    setUrlsYResultados(prev => prev.filter((_, i) => i !== index));
+  };
 
-  const handleDownload = async () => {
+  
+    const handleDownload = async () => {
+    setLoading(true);
+    setPrimera(false);
     try {
 
-      const response = await fetch(`http://localhost:4000/download?url=${encodeURIComponent(url)}`);
+      const response = await fetch(`https://200.85.177.8:4000/download?url=${encodeURIComponent(url)}`);
       const data = await response.json();
-      setTranscription(data.texto || "No se pudo obtener el texto");
+      const resultado = data.texto || "No se pudo obtener el texto";
+      setTranscription(resultado);
+      setLoading(false);
+      // Guardar en el historial
+      setUrlsYResultados(prev => [...prev, { url, resultado }]);
 
     } catch (error) {
       console.error('Error fetching download URL:', error);
+      setLoading(false);
+      setFallo(true);
     }
   };
 
@@ -24,9 +43,33 @@ function App() {
       <h1 className='titulo'>Generador de ideas</h1>
       <input  type="text" placeholder="URL" value={url} onChange={(e) => setUrl(e.target.value)}/>
       <button onClick={handleDownload}>Generar idea</button>
-      <div className='transcription'>
-        <h2>Transcripción</h2>
-        <p>{transcription}</p>
+        <h2>Transcripciones</h2>
+      <div className='transcriptiones'>
+          {/* Transcripciones existentes */}
+          {urlsYResultados.map((urlYResultado, index) => (
+            <Transcripcion
+              key={index} 
+              index={index}
+              urlYResultado={urlYResultado} 
+              eliminar={eliminarTranscripcion} 
+            />
+          ))}
+          
+          {/* Estado de carga o error para la nueva transcripción */}
+          {loading && (
+            <div>
+              <p>Cargando nueva transcripción...</p>
+            </div>
+          )}
+          {fallo && (
+            <div>
+              <p>
+                Error al cargar la transcripción. (¿La URL es correcta?)<br/>
+                ¡Revisa la consola para más detalles! <a href='https://200.85.177.8:4000/' target='_blank' rel='noopener noreferrer'>Aquí</a>
+              </p>
+            </div>
+          )}
+          {primera && <p>{transcription}</p>}
       </div>
     </div>
   );
