@@ -1,5 +1,5 @@
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import Transcripcion from './components/Transcripciones/Transcripcion';
 
 
@@ -8,9 +8,15 @@ function App() {
   const [transcription, setTranscription] = useState('Aqui aparecera la transcripcion');
   const [loading, setLoading] = useState(false);
   const [fallo, setFallo] = useState(false);
-  const [primera, setPrimera] = useState(true);
-
+  const [laPrimera, setLaPrimera] = useState(true);
   const [urlsYResultados, setUrlsYResultados] = useState([]);
+
+  useEffect(() => {
+    if (urlsYResultados.length === 0) {
+      setTranscription("Aqui aparecera la transcripcion");
+    }
+  }, [urlsYResultados]);
+
 
   const eliminarTranscripcion = (index) => {
     console.log("eliminando transcripción en el índice:", index);
@@ -20,9 +26,8 @@ function App() {
   
     const handleDownload = async () => {
     setLoading(true);
-    setPrimera(false);
+    setLaPrimera(false);
     try {
-
       const response = await fetch(`https://200.85.177.8:4000/download?url=${encodeURIComponent(url)}`);
       const data = await response.json();
       const resultado = data.texto || "No se pudo obtener el texto";
@@ -65,12 +70,15 @@ function App() {
             <div>
               <p>
                 Error al cargar la transcripción. (¿La URL es correcta?)<br/>
-                ¡Revisa la consola para más detalles! <a href='https://200.85.177.8:4000/' target='_blank' rel='noopener noreferrer'>Aquí</a>
               </p>
             </div>
           )}
-          {primera && <p>{transcription}</p>}
+          {laPrimera && <p>{transcription}</p>}
       </div>
+      <footer>
+        <p>Generador de ideas - 2025</p>
+        <a href='https://200.85.177.8:4000/' target='_blank' rel='noopener noreferrer'>Terminal</a>
+      </footer>
     </div>
   );
 }
