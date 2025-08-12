@@ -5,9 +5,7 @@ import "./Transcripcion.css"
 
 const copiarAlPortapapeles = (texto) => {
   navigator.clipboard.writeText(texto)
-    .then(() => {
-      alert("Texto copiado al portapapeles");
-    })
+  //puto el que lee
     .catch((error) => {
       console.error("Error al copiar al portapapeles:", error);
     });
