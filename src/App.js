@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import Transcripcion from "./components/Transcripciones/Transcripcion";
 
 function App() {
@@ -44,28 +44,22 @@ function App() {
   };
   
   const handleDownloadWhitVideo = async () => {
-    setUrl("")
+    setUrl("");
     const formData = new FormData();
     formData.append("video", file);
     setLoading(true);
     setLaPrimera(false);
     try {
-      
       const response = await fetch("https://200.85.177.8:4000/uploadVideo", {
         method: "POST",
         body: formData,
       });
-
-      // const response = await fetch(`https://localhost:4000/uploadVideo`, {
-      //   method: "POST",
-      //   body: formData,
-      // });
       const data = await response.json();
       const resultado = data.texto || "No se pudo obtener el texto";
       setTranscription(resultado);
       setLoading(false);
-      // Guardar en el historial
-      setUrlsYResultados((prev) => [...prev, { video: file.name, resultado }]);
+      // Guardar en el historial con el nombre del archivo
+      setUrlsYResultados((prev) => [...prev, { url: file.name, resultado }]);
     } catch (error) {
       console.error("Error fetching download URL with video:", error);
       setLoading(false);
