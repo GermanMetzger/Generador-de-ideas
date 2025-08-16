@@ -44,6 +44,7 @@ function App() {
   };
   
   const handleDownloadWhitVideo = async () => {
+    setUrl("")
     const formData = new FormData();
     formData.append("video", file);
     setLoading(true);
