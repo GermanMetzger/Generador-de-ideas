@@ -14,9 +14,9 @@ const copiarAlPortapapeles = (texto) => {
 
 export default function Transcripcion({ urlYResultado, eliminar, index }) {
   return (
-    <div className='transcription'>
-      <div>
-        <h3>URL: {urlYResultado.url}</h3>
+    <div className='transcriptionTarjeta'>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <h3> {urlYResultado.url ? "URL:" + urlYResultado.url : "Video descargado"}</h3>
         <p>Transcripción: {urlYResultado.resultado}</p>
         <button style={{ backgroundColor: 'blue', color: 'white', margin: '15px' }} onClick={() => {copiarAlPortapapeles(urlYResultado.resultado); eliminar(index);}}>Copiar y Eliminar</button>
         <button style={{ backgroundColor: 'red', color: 'white', margin: '15px' }} onClick={() => eliminar(index)}>Eliminar</button>

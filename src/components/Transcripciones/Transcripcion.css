@@ -1,5 +1,4 @@
-.transcription{
-    margin-top: 20px;
+.transcriptionTarjeta{
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -9,6 +8,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    max-width: 60%;
+    max-width: 90%;
     padding: 2%;
+    margin: 20px;
 }
