@@ -65,7 +65,7 @@ function App() {
       setTranscription(resultado);
       setLoading(false);
       // Guardar en el historial
-      setUrlsYResultados((prev) => [...prev, { url, resultado }]);
+      setUrlsYResultados((prev) => [...prev, { video: file.name, resultado }]);
     } catch (error) {
       console.error("Error fetching download URL with video:", error);
       setLoading(false);
