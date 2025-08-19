@@ -72,6 +72,7 @@ function App() {
       const resultado = data.texto || "No se pudo obtener el texto";
       setTranscription(resultado);
       setLoading(false);
+      setFallo(false)
       // Guardar en el historial con el nombre del archivo
       setUrlsYResultados((prev) => [...prev, { url: file.name, resultado }]);
     } catch (error) {
