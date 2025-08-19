@@ -68,16 +68,11 @@ function App() {
         body: formData,
       });
       const data = await response.json();
-      if(!data.length === 0){
-        const resultado = data.texto || "No se pudo obtener el texto";
-        setTranscription(resultado);
-        setLoading(false);
-        // Guardar en el historial con el nombre del archivo
-        setUrlsYResultados((prev) => [...prev, { url: file.name, resultado }]);
-      }else{
-        setLoading(false);
-        setFallo(true);
-      }
+      const resultado = data.texto || "No se pudo obtener el texto";
+      setTranscription(resultado);
+      setLoading(false);
+      // Guardar en el historial con el nombre del archivo
+      setUrlsYResultados((prev) => [...prev, { url: file.name, resultado }]);
     } catch (error) {
       console.error("Error fetching download URL with video:", error);
       setLoading(false);
