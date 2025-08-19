@@ -1,6 +1,8 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import Transcripcion from "./components/Transcripciones/Transcripcion";
+import sun from "./assets/sun.svg"
+import moon from "./assets/moon.svg"
 
 function App() {
   const [url, setUrl] = useState("");
@@ -12,18 +14,29 @@ function App() {
   const [laPrimera, setLaPrimera] = useState(true);
   const [urlsYResultados, setUrlsYResultados] = useState([]);
   const [file, setFile] = useState(null);
-
+  const [noche, setNoche] = useState(true);
+  
   useEffect(() => {
     if (urlsYResultados.length === 0) {
       setTranscription("Aqui aparecera la transcripcion");
     }
   }, [urlsYResultados]);
 
+  useEffect(() => {
+  if (noche) {
+    document.body.classList.add("noche");
+    document.documentElement.classList.add("noche");
+  } else {
+    document.body.classList.remove("noche");
+    document.documentElement.classList.remove("noche");
+  }
+}, [noche]);
+  
   const eliminarTranscripcion = (index) => {
     console.log("eliminando transcripción en el índice:", index);
     setUrlsYResultados((prev) => prev.filter((_, i) => i !== index));
   };
-
+  
   const handleDownload = async () => {
     setLoading(true);
     setLaPrimera(false);
@@ -55,11 +68,16 @@ function App() {
         body: formData,
       });
       const data = await response.json();
-      const resultado = data.texto || "No se pudo obtener el texto";
-      setTranscription(resultado);
-      setLoading(false);
-      // Guardar en el historial con el nombre del archivo
-      setUrlsYResultados((prev) => [...prev, { url: file.name, resultado }]);
+      if(!data.length === 0){
+        const resultado = data.texto || "No se pudo obtener el texto";
+        setTranscription(resultado);
+        setLoading(false);
+        // Guardar en el historial con el nombre del archivo
+        setUrlsYResultados((prev) => [...prev, { url: file.name, resultado }]);
+      }else{
+        setLoading(false);
+        setFallo(true);
+      }
     } catch (error) {
       console.error("Error fetching download URL with video:", error);
       setLoading(false);
@@ -68,13 +86,16 @@ function App() {
   };
 
   return (
-    <div className="app">
-      <h1 className="titulo">Generador de ideas</h1>
-      <div className="inputs">
+    <div className={noche ? "app noche" : "app"}>
+      <h1 className={noche ? "titulo noche" : "titulo"}>Generador de ideas</h1>
+      <button onClick={() => setNoche(!noche)}
+      className={noche ? "alternarNoche" : "alternarNoche noche"}
+        ><img src={noche ? sun : moon} style={{ filter: "invert(1)" }}></img></button>
+      <div className={noche ? "inputs noche" : "inputs"}>
         <div>
           <h3>👇Arrastra video aquí👇</h3>
           <input
-            className="file-input"
+            className={noche ? "fileInput noche" : "fileInput"}
             type="file"
             placeholder="Arrastra video aquí"
             accept=".mp3"
@@ -94,15 +115,15 @@ function App() {
         </div>
       </div>
       <h2>👇Transcripciones👇</h2>
-      <div className="transcriptiones">
+      <div className="transcripciones">
         {/* Transcripciones existentes */}
         {urlsYResultados.map((urlYResultado, index) => (
           <div>
-          <h3 index={index}>{index}</h3>
             <Transcripcion
               index={index}
               urlYResultado={urlYResultado}
               eliminar={eliminarTranscripcion}
+              noche={noche}
             />
             </div>
         ))}
@@ -122,10 +143,11 @@ function App() {
           </div>
         )}
         {laPrimera && <p>{transcription}</p>}
+        {!laPrimera && !urlsYResultados.length && !fallo && <p>😎</p>}
       </div>
-      <footer>
+      <footer className={noche ? "footer noche" : "footer"}>
         <p>Generador de ideas - 2025</p>
-        <p>V1.1</p>
+        <p>V1.2</p>
         <a
           href="https://200.85.177.8:4000/"
           target="_blank"
